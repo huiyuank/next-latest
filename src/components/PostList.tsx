@@ -4,21 +4,21 @@ import React from "react";
 type Post = { id: number; title: string; content?: string };
 
 export default function PostList({
-    posts,
+    posts = [],
     onEdit,
     onDelete,
 }: {
-    posts: Post[];
+    posts: Post[] | undefined;
     onEdit: (p: Post) => void;
     onDelete: (id: number) => void;
 }) {
     return (
         <div>
-            {posts.length === 0 ? (
+            {posts?.length === 0 ? (
                 <p className="text-muted">No posts yet</p>
             ) : (
                 <ul className="space-y-3">
-                    {posts.map((p) => (
+                    {posts?.map((p) => (
                         <li key={p.id} className="card">
                             <div className="flex justify-between items-start">
                                 <div>

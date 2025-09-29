@@ -10,9 +10,17 @@ export default function Page() {
     const [editing, setEditing] = useState<Post | null>(null);
 
     async function load() {
-        const res = await fetch("/api/posts");
-        const data = await res.json();
-        setPosts(data);
+        try {
+            const res = await fetch("/api/posts");
+            const data = await res.json();
+            if (res.ok) {
+                setPosts(data);
+            } else {
+                throw new Error(res.statusText);
+            }
+        } catch (e) {
+            console.error("oops");
+        }
     }
 
     const channel = new BroadcastChannel("posts");

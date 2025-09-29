@@ -14,10 +14,25 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Represents a db table
 model Post {
   id        Int      @id @default(autoincrement())
   title     String
   content   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  comments  Comment[]
+}
+
+model Comment {
+  id         Int      @id @default(autoincrement())
+  comment    String?
+  createdAt  DateTime @default(now())
+  resolved   Boolean  @default(false)
+  // Foreign key to Post
+  postId     Int
+  // Relation field to Post
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
 }

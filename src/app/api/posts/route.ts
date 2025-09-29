@@ -7,6 +7,7 @@ export async function GET() {
         logServer("Fetching posts");
         const posts = await prisma.post.findMany({
             orderBy: { createdAt: "desc" },
+            include: { comments: { orderBy: { createdAt: "desc" } } },
         });
         return NextResponse.json(posts);
     } catch (err) {
