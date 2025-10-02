@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { logServer, logError } from "@/lib/logger";
+import type { Post, PostWithComments } from "@/app/api/types";
 
-export async function GET() {
+export async function GET(): Promise<
+    NextResponse<PostWithComments[] | { error: string }>
+> {
     try {
         logServer("Fetching posts");
         const posts = await prisma.post.findMany({
@@ -19,7 +22,9 @@ export async function GET() {
     }
 }
 
-export async function POST(request: Request) {
+export async function POST(
+    request: Request
+): Promise<NextResponse<Post | { error: string }>> {
     try {
         const body = await request.json();
         logServer("Creating post", { title: body.title });
@@ -36,7 +41,9 @@ export async function POST(request: Request) {
     }
 }
 
-export async function PUT(request: Request) {
+export async function PUT(
+    request: Request
+): Promise<NextResponse<Post | { error: string }>> {
     try {
         const body = await request.json();
         logServer("Updating post", { id: body.id });
@@ -54,19 +61,24 @@ export async function PUT(request: Request) {
     }
 }
 
-export async function DELETE(request: Request) {
+export async function DELETE(
+    request: Request
+): Promise<NextResponse<{ success: boolean; error?: string }>> {
     try {
         const { searchParams } = new URL(request.url);
         const id = searchParams.get("id");
         logServer("Deleting post", { id });
         if (!id)
-            return NextResponse.json({ error: "Missing id" }, { status: 400 });
+            return NextResponse.json(
+                { success: false, error: "Missing id" },
+                { status: 400 }
+            );
         await prisma.post.delete({ where: { id: Number(id) } });
         return NextResponse.json({ success: true });
     } catch (err) {
         logError("Failed to delete post", err);
         return NextResponse.json(
-            { error: "Failed to delete post" },
+            { success: false, error: "Failed to delete post" },
             { status: 500 }
         );
     }

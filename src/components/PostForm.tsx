@@ -1,4 +1,5 @@
 "use client";
+import { Post } from "@/app/api/types";
 import React, { useState, useEffect } from "react";
 
 export default function PostForm({
@@ -8,7 +9,7 @@ export default function PostForm({
 }: {
     onCancel?: () => void;
     onSaved: () => void;
-    editing?: { id: number; title: string; content?: string } | null;
+    editing?: Post | null;
 }) {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");

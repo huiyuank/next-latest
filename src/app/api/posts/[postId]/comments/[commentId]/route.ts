@@ -6,7 +6,7 @@ type DeleteCommentParams = { postId: string; commentId: string };
 export async function DELETE(
     _: Request,
     { params }: { params: DeleteCommentParams }
-) {
+): Promise<NextResponse<null | { error: string }>> {
     const postId = Number(params.postId);
     const commentId = Number(params.commentId);
 
@@ -27,7 +27,7 @@ export async function DELETE(
 
         if (result.count === 0) {
             // Either the comment doesn't exist or it doesn't belong to this post
-            return NextResponse.json("Not found", { status: 404 });
+            return NextResponse.json({ error: "Not found" }, { status: 404 });
         }
 
         // Successfully deleted

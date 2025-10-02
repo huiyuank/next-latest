@@ -1,15 +1,14 @@
 "use client";
 import React from "react";
-
-type Post = { id: number; title: string; content?: string };
+import { PostWithComments } from "@/app/api/types";
 
 export default function PostList({
     posts = [],
     onEdit,
     onDelete,
 }: {
-    posts: Post[] | undefined;
-    onEdit: (p: Post) => void;
+    posts: PostWithComments[] | undefined;
+    onEdit: (p: PostWithComments) => void;
     onDelete: (id: number) => void;
 }) {
     return (
@@ -43,6 +42,7 @@ export default function PostList({
                                         Delete
                                     </button>
                                 </div>
+                                <div>{p.comments?.length} comments</div>
                             </div>
                         </li>
                     ))}

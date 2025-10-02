@@ -1,18 +1,19 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { logServer, logError } from "@/lib/logger";
+import type { Comment } from "@/app/api/types";
 
 type BaseCommentParams = { postId: string };
 
 export async function GET(
     _: Request,
     { params }: { params: BaseCommentParams }
-) {
+): Promise<NextResponse<Comment[] | { error: string }>> {
     logServer("Fetching comments for post", { postId: params.postId });
 
     const postId = Number(params.postId);
     if (!Number.isInteger(postId)) {
-        return NextResponse.json("Invalid postId", { status: 400 });
+        return NextResponse.json({ error: "Invalid postId" }, { status: 400 });
     }
 
     try {
@@ -33,12 +34,12 @@ export async function GET(
 export async function POST(
     request: Request,
     { params }: { params: BaseCommentParams }
-) {
+): Promise<NextResponse<Comment | { error: string }>> {
     logServer("Creating comment for post", { postId: params.postId });
 
     const postId = Number(params.postId);
     if (!Number.isInteger(postId)) {
-        return NextResponse.json("Invalid postId", { status: 400 });
+        return NextResponse.json({ error: "Invalid postId" }, { status: 400 });
     }
 
     try {
